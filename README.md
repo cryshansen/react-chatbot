@@ -1,73 +1,131 @@
-# React + TypeScript + Vite
+# Orbie AI — Drop-In Chatbot Widget for React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Orbie AI is a self-contained, API-agnostic chatbot widget for React applications.
 
-Currently, two official plugins are available:
+It’s designed to be:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-  Drop-in
+- Feature-scoped
+- API-agnostic
+- Fully testable
+- Themeable
 
-## React Compiler
+No app-level providers required.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Features
 
-## Expanding the ESLint configuration
+Plug-and-play React widget
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Works with any GET-based chatbot API
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Isolated internal state
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Optional context + user identification
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Dark / light theme support
+
+Built-in loading + error handling
+
+Widget-level integration tests
+
+---
+
+### Installation
+
+Clone or copy the orbie-ai feature into your project:
+```bash
+src/features/orbie-ai
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Or install via your internal package system if published.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Environment Variables
+
+Orbie does not read environment variables directly.
+
+Your host app owns configuration.
+
+Example .env:
+```env
+VITE_CHATBOT_API_URL=http://localhost:8080/api/fortune-ai
+VITE_CHATBOT_API_ENDPOINT=?category=
+VITE_CHATBOT_NAME=Oracle
 ```
+
+### Host App Setup
+```ts
+src/config/env.ts
+export const API_CONFIG = {
+  CHATBOT_BASE_URL: import.meta.env.VITE_CHATBOT_API_URL,
+  CHATBOT_API_ENDPOINT: import.meta.env.VITE_CHATBOT_API_ENDPOINT,
+};
+```
+---
+
+### Usage
+```tsx
+import { OrbieWidget } from "./features/orbie-ai/components/OrbieWidget";
+import { API_CONFIG } from "./config/env";
+
+const config = {
+  apiUrl: API_CONFIG.CHATBOT_BASE_URL,
+  endpoint: API_CONFIG.CHATBOT_API_ENDPOINT,
+};
+
+<OrbieWidget
+  config={config}
+  chatbotName="Oracle"
+  theme="light"
+  initialPrompt="Ask me about your future 🔮"
+  context="home-page"
+  userId="123"
+/>;
+```
+---
+
+### Props
+
+|Prop	| Type	| Required	| Description |
+| config |	{ apiUrl: string; endpoint: string }	| ✅	| API configuration |
+| chatbotName	| string	| ✅	| Display name of the bot|
+|initialPrompt |	string	| ❌	| First system message|
+|theme	| "light | dark"	| ❌| 	UI theme|
+|context	| string	| ❌	| Usage context (page, app area)|
+|userId	| string	| ❌	| Optional user identifier |
+
+---
+
+### Testing
+
+Widget-level tests are included:
+```bash
+features/orbie-ai/_tests_/
+```
+
+Run tests:
+```bash
+npm run test
+```
+
+The widget is tested independently of the host app, ensuring safe reuse.
+
+--- 
+
+### What Orbie Does NOT Do
+
+- Enforce authentication
+- Assume API response structure beyond what you define
+- Modify global app state
+- Depend on app-level routing
+
+That’s intentional.
+
+---
+
+### Design Philosophy
+
+Orbie is built around feature isolation.
+
+If you can remove a feature without breaking your app — you’ve done it right.
