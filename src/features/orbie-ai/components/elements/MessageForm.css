@@ -1,0 +1,68 @@
+
+.input-wrapper {
+    display: flex;
+    gap: 1rem;
+    border-radius: 1rem;
+    padding: 0.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.input-wrapper form{ width:100%; }
+
+.message-input {
+    flex: 1;
+    min-width: 0; /* IMPORTANT for flex inputs */
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.message-input:focus {
+    outline: none;
+}
+
+.message-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    padding: 0.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: var(--bot-message-bg);
+    color: var(--text-primary);
+}
+
+.send-button {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.send-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
